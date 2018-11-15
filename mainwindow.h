@@ -8,6 +8,7 @@
 #include "viewforecast.h"
 #include "citydata.h"
 #include "networkhandler.h"
+#include <QCompleter>
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +30,8 @@ private slots:
 
     void on_viewForecast_clicked();
 
+    void on_clearSearchField_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -36,6 +39,7 @@ private:
     QMultiMap<int, WeatherData*> weatherForecast;
     CityData *cityData;
     NetworkHandler *networkHandler;
+    QCompleter *completerForSearch;
 };
 
 #endif // MAINWINDOW_H

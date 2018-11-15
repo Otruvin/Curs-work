@@ -12,7 +12,7 @@ CityData::CityData(const QString &latitude, const QString &longitude,
 
 CityData::CityData(const QString &country, const QString &cityName)
 {
-    QFile file("/home/otruvin/QtProject/CursWork/worldcities.csv");
+    QFile file("/home/otruvin/QtProject/Curs-work/worldcities.csv");
 
         if (!file.open(QFile::ReadOnly | QFile::Text))
         {

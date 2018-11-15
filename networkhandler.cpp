@@ -26,6 +26,8 @@ void NetworkHandler::makeCityQuery(const CityData &city)
 
     queryForRealTimeWeather.addQueryItem("lat", city.getLatitude());
     queryForRealTimeWeather.addQueryItem("lon", city.getLongitude());
+    queryForRealTimeWeather.addQueryItem("lang", "ru");
+    queryForRealTimeWeather.addQueryItem("units", "metric");
     queryForRealTimeWeather.addQueryItem("mode", "json");
     queryForRealTimeWeather.addQueryItem("APPID", ppid);
     urlForRealTimeWeather.setQuery(queryForRealTimeWeather);
@@ -40,6 +42,8 @@ void NetworkHandler::makeCityQuery(const CityData &city)
 
     queryForForecast.addQueryItem("lat", city.getLatitude());
     queryForForecast.addQueryItem("lon", city.getLongitude());
+    queryForForecast.addQueryItem("lang", "ru");
+    queryForForecast.addQueryItem("units", "metric");
     queryForForecast.addQueryItem("mode", "json");
     queryForForecast.addQueryItem("cnt", "40");
     queryForForecast.addQueryItem("APPID", ppid);
@@ -89,11 +93,11 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
             {
                 value = object.value("main");
                 tempObject = value.toObject();
-                this->realTimeweatherData->setTemperature(QString::number(tempObject.value("temp").toDouble() - 273.15));
+                this->realTimeweatherData->setTemperature(QString::number(tempObject.value("temp").toDouble()));
                 this->realTimeweatherData->setPressure(QString::number(tempObject.value("pressure").toDouble()));
                 this->realTimeweatherData->setHumidity(QString::number(tempObject.value("humidity").toDouble()));
-                this->realTimeweatherData->setTempMin(QString::number(tempObject.value("temp_min").toDouble() - 273.15));
-                this->realTimeweatherData->setTempMax(QString::number(tempObject.value("temp_max").toDouble() - 273.15));
+                this->realTimeweatherData->setTempMin(QString::number(tempObject.value("temp_min").toDouble()));
+                this->realTimeweatherData->setTempMax(QString::number(tempObject.value("temp_max").toDouble()));
                 this->realTimeweatherData->setTime(NULL);
 
             }
@@ -135,9 +139,9 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
                                                                            tempWeatherObject.value("icon").toString(),
                                                                            QString::number(tempMain.value("pressure").toDouble()),
                                                                            QString::number(tempMain.value("humidity").toDouble()),
-                                                                           QString::number(tempMain.value("temp_min").toDouble() - 273.15),
-                                                                           QString::number(tempMain.value("temp_max").toDouble() - 273.15),
-                                                                           QString::number(tempMain.value("temp").toDouble() - 273.15),
+                                                                           QString::number(tempMain.value("temp_min").toDouble()),
+                                                                           QString::number(tempMain.value("temp_max").toDouble()),
+                                                                           QString::number(tempMain.value("temp").toDouble()),
                                                                            dateAndTime.at(1)));
                     //qDebug() << weatherForecast.value(2)->getTime() << endl;
                 }

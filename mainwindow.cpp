@@ -3,22 +3,28 @@
 #include "citydata.h"
 #include "networkhandler.h"
 #include "weatherdata.h"
+#include "searchhelper.h"
 #include <iostream>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    ui->setupUi(this);
     networkHandler = new NetworkHandler();
     forecastWindow = new ViewForecast();
+    completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
+    ui->search->setCompleter(this->completerForSearch);
     connect(this, SIGNAL(sendForecast(QMultiMap<int,WeatherData*>)), forecastWindow, SLOT(recieveForecast(QMultiMap<int,WeatherData*>)));
-    ui->setupUi(this);
+    ui->clearSearchField->hide();
 }
 
 MainWindow::~MainWindow()
 {
     delete networkHandler;
     delete forecastWindow;
+    delete completerForSearch;
     delete cityData;
     delete ui;
 }
@@ -26,29 +32,43 @@ MainWindow::~MainWindow()
 void MainWindow::on_okSearch_clicked()
 {
 
-    QStringList searchParam = ui->search->text().split(",");
+        if(ui->search->text().isEmpty())
+        {
+            QMessageBox::information(this, "Ошибка введенных данных", "Поле для ввода поисковых данных пустое");
+        }else if(!ui->search->text().contains(","))
+        {
+            QMessageBox::information(this, "Ошибка формата введенных данных", "Формат ввода: город,страна");
+        }else{
 
-    this->cityData = new CityData(searchParam.at(0), searchParam.at(1));
+            QStringList searchParam = ui->search->text().split(",");
 
-    QJsonObject jsonObject = cityData->getJSONCityData();
-    QJsonDocument document(jsonObject);
-    QString stringJson(document.toJson(QJsonDocument::Compact));
+            this->cityData = new CityData(searchParam.at(1), searchParam.at(0));
 
-    std::cout << stringJson.toStdString() << std::endl;
+            if(this->cityData->getLatitude() == 0 && this->cityData->getLongitude() == 0)
+            {
+            QMessageBox::information(this, "Ошибка введенных данных", "Не найдено городов с таким названием, или страной");
+            }else{
 
-    this->networkHandler->makeCityQuery(*cityData);
+                this->networkHandler->makeCityQuery(*cityData);
 
-    WeatherData *weatherData = networkHandler->getRealTimeWeatherData();
-    this->weatherForecast = networkHandler->getWeatherForecast();
+                WeatherData *weatherData = networkHandler->getRealTimeWeatherData();
+                this->weatherForecast = networkHandler->getWeatherForecast();
 
-    ui->humidityL->setText(weatherData->getHumidity() + " %");
-    ui->pressureL->setText(weatherData->getPressure() + " hPa");
-    ui->temperatureL->setText(weatherData->getTemperature() + " °C");
-    ui->weatherDescrL->setText(weatherData->getWeatherDescription());
-    ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
-    ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
+                ui->humidityL->setText(weatherData->getHumidity() + " %");
+                ui->pressureL->setText(weatherData->getPressure() + " hPa");
+                ui->temperatureL->setText(weatherData->getTemperature() + " °C");
+                ui->weatherDescrL->setText(weatherData->getWeatherDescription());
+                ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
+                ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
 
-    ui->search->clear();
+            }
+
+        }
+
+        if(!ui->search->text().isEmpty())
+        {
+            ui->clearSearchField->show();
+        }
 }
 
 void MainWindow::on_viewForecast_clicked()
@@ -57,4 +77,9 @@ void MainWindow::on_viewForecast_clicked()
     emit sendForecast(this->weatherForecast);
 
     forecastWindow->show();
+}
+
+void MainWindow::on_clearSearchField_clicked()
+{
+    ui->search->clear();
 }
