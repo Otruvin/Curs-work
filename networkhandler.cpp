@@ -143,38 +143,9 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
                                                                            QString::number(tempMain.value("temp_max").toDouble()),
                                                                            QString::number(tempMain.value("temp").toDouble()),
                                                                            dateAndTime.at(1)));
-                    //qDebug() << weatherForecast.value(2)->getTime() << endl;
                 }
             }
         }
-
-        /*QString dt = QStringLiteral("2018-11-13");
-        QString format = QStringLiteral("YYYY-mm-dd");
-                //QDate::fromString("2018-11-13", "YYYY-mm-dd");
-        QString string = "Tuesday, 23 April 12 22:51:41";
-        //QString format = "dddd, d MMMM yy hh:mm:ss";
-        //QDateTime valid = QDateTime::fromString(string, format);
-
-        QMap<QString, WeatherData*>::const_iterator i = weatherForecast.constBegin();
-
-        while (i != weatherForecast.constEnd()) {
-            QStringList dateAndTime = i.key().split(" ");
-            qDebug() << "Date: " << dateAndTime.at(0) << " Time: " << dateAndTime.at(1) << endl;
-            QDate date = QDate::fromString(dateAndTime.at(0), "yyyy-MM-dd");
-            qDebug() << "Day of the week: " << date.dayOfWeek() << endl;
-            ++i;
-        }
-
-        qDebug() << this->weatherForecast.constBegin().key() /*QDate::fromString(weatherForecast.keyBegin())<< endl;*/
-        /*QList<WeatherData*> wee = this->weatherForecast.values();
-
-        for(int i = 0; i < 3; ++i)"2018-11-13 12:00:00"
-        {
-            //WeatherData* ww = (WeatherData*) wee[i];
-            qDebug() << this->weatherForecast[i]->getTemperature() << endl;
-            //delete ww;
-        }*/
-        //qDebug() << this->weatherForecast << endl;
 
     }
 

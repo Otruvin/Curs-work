@@ -15,19 +15,22 @@ MainWindow::MainWindow(QWidget *parent) :
     networkHandler = new NetworkHandler();
     forecastWindow = new ViewForecast();
     fileHandler = new FileHandler();
+    favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
     ui->search->setCompleter(this->completerForSearch);
     connect(this, SIGNAL(sendForecast(QMultiMap<int,WeatherData*>)), forecastWindow, SLOT(recieveForecast(QMultiMap<int,WeatherData*>)));
     ui->clearSearchField->hide();
+
+    refreshFavorList();
 }
 
 MainWindow::~MainWindow()
 {
+    fileHandler->saveFavor(this->favoraties);
     delete fileHandler;
     delete networkHandler;
     delete forecastWindow;
     delete completerForSearch;
-    delete cityData;
     delete ui;
 }
 
@@ -42,7 +45,8 @@ void MainWindow::on_okSearch_clicked()
             QMessageBox::information(this, "Ошибка формата введенных данных", "Формат ввода: город,страна");
         }else{
 
-            QStringList searchParam = ui->search->text().split(",");
+            this->searchCity = ui->search->text();
+            searchParam = this->searchCity.split(",");
 
             this->cityData = new CityData(searchParam.at(1), searchParam.at(0));
 
@@ -56,21 +60,15 @@ void MainWindow::on_okSearch_clicked()
                 WeatherData *weatherData = networkHandler->getRealTimeWeatherData();
                 this->weatherForecast = networkHandler->getWeatherForecast();
 
-                ui->humidityL->setText(weatherData->getHumidity() + " %");
-                ui->pressureL->setText(weatherData->getPressure() + " hPa");
-                ui->temperatureL->setText(weatherData->getTemperature() + " °C");
-                ui->weatherDescrL->setText(weatherData->getWeatherDescription());
-                ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
-                ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
+                showRealTimeWeather(weatherData);
 
+                delete cityData;
             }
 
         }
 
-        if(!ui->search->text().isEmpty())
-        {
             ui->clearSearchField->show();
-        }
+
 }
 
 void MainWindow::on_viewForecast_clicked()
@@ -84,5 +82,79 @@ void MainWindow::on_viewForecast_clicked()
 void MainWindow::on_clearSearchField_clicked()
 {
     ui->search->clear();
+}
+
+
+void MainWindow::on_addFavorCity_clicked()
+{
+    if(!this->searchCity.isEmpty())
+    {
+        this->favoraties.insert(this->searchCity);
+        refreshFavorList();
+    }else
+    {
+        QMessageBox::information(this, "Ошибка введенных данных", "Вы пытаетесь добавить город без заданных данных");
+    }
 
 }
+
+void MainWindow::on_dropFavorCity_clicked()
+{
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Подтверждение удаления города из избранного",
+                                                              "Вы действительно хотите удалить из избранного выбранный город?",
+                                                              QMessageBox::Yes | QMessageBox::No);
+
+    if(reply == QMessageBox::Yes)
+    {
+        this->favoraties.remove(ui->listWidget->selectedItems().at(0)->text());
+        refreshFavorList();
+    }
+}
+
+void MainWindow::on_clearFavoraties_clicked()
+{
+    QMessageBox::StandardButton reply = QMessageBox::question(this, "Подтверждение очистки списка избранного",
+                                                              "Вы действительно хотите очистить список избранного?",
+                                                              QMessageBox::Yes | QMessageBox::No);
+    if(reply == QMessageBox::Yes)
+    {
+        this->favoraties.clear();
+        refreshFavorList();
+    }
+
+}
+
+void MainWindow::refreshFavorList()
+{
+    ui->listWidget->clear();
+
+    for(QString city: this->favoraties)
+    {
+        ui->listWidget->addItem(city);
+    }
+}
+
+void MainWindow::on_selectFavorCity_clicked()
+{
+    searchParam = ui->listWidget->currentItem()->text().split(",");
+    this->cityData = new CityData(searchParam.at(1), searchParam.at(0));
+    this->networkHandler->makeCityQuery(*cityData);
+    showRealTimeWeather(networkHandler->getRealTimeWeatherData());
+    this->weatherForecast = networkHandler->getWeatherForecast();
+    emit sendForecast(this->weatherForecast);
+
+    delete cityData;
+}
+
+
+void MainWindow::showRealTimeWeather(WeatherData * weatherData)
+{
+    ui->humidityL->setText(weatherData->getHumidity() + " %");
+    ui->pressureL->setText(weatherData->getPressure() + " hPa");
+    ui->temperatureL->setText(weatherData->getTemperature() + " °C");
+    ui->weatherDescrL->setText(weatherData->getWeatherDescription());
+    ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
+    ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
+}
+
+

@@ -33,6 +33,15 @@ private slots:
 
     void on_clearSearchField_clicked();
 
+
+    void on_addFavorCity_clicked();
+
+    void on_dropFavorCity_clicked();
+
+    void on_clearFavoraties_clicked();
+
+    void on_selectFavorCity_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -42,6 +51,11 @@ private:
     NetworkHandler *networkHandler;
     QCompleter *completerForSearch;
     FileHandler *fileHandler;
+    QSet<QString> favoraties;
+    QString searchCity;
+    QStringList searchParam;
+    void refreshFavorList();
+    void showRealTimeWeather(WeatherData *weatherData);
 };
 
 #endif // MAINWINDOW_H

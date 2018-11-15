@@ -2,6 +2,7 @@
 #include "ui_viewforecast.h"
 #include <QDebug>
 #include <iostream>
+//#define DEBUG = 1;
 
 ViewForecast::ViewForecast(QWidget *parent) :
     QWidget(parent),
@@ -18,13 +19,17 @@ ViewForecast::~ViewForecast()
 void ViewForecast::recieveForecast(QMultiMap<int, WeatherData *> forecast)
 {
     ui->listWidget->clear();
+
+    #ifdef DEBUG
     qDebug() << forecast << endl;
-    //QMultiMap<int, WeatherData*>::iterator i = forecast.constBegin();
+    #endif
 
     QList<WeatherData*> weather = forecast.values();
     QList<int> days = forecast.keys();
 
+    #ifdef DEBUG
     qDebug() << days << endl;
+    #endif
 
     QString day;
 

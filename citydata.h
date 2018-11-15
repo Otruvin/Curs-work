@@ -18,7 +18,6 @@ private:
 
 public:
 
-
     CityData(const QString &latitude, const QString &longitude,
              const QString &country, const QString &cityName);
     CityData(const QString &country, const QString &cityName);
