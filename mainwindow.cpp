@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     networkHandler = new NetworkHandler();
-    forecastWindow = new ViewForecast();
     fileHandler = new FileHandler();
     favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
@@ -30,7 +29,6 @@ MainWindow::~MainWindow()
     fileHandler->saveFavor(this->favoraties);
     delete fileHandler;
     delete networkHandler;
-    delete forecastWindow;
     delete completerForSearch;
     delete ui;
 }
@@ -129,7 +127,14 @@ void MainWindow::refreshFavorList()
 
 void MainWindow::on_viewForecast_clicked()
 {
-    showWeather(this->weatherForecast.values().at(ui->allForecastList->currentIndex().row()));
+    if(ui->allForecastList->currentIndex().isValid())
+    {
+        showWeather(this->weatherForecast.values().at(ui->allForecastList->currentIndex().row()));
+    }else
+    {
+        QMessageBox::information(this, "Ошибка выбора погоды из прогноза", "Вы не выбрали временной промежуток из прогноза");
+    }
+
 }
 
 void MainWindow::on_selectFavorCity_clicked()

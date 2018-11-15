@@ -5,7 +5,6 @@
 #include <QDebug>
 #include <QMultiMap>
 #include "weatherdata.h"
-#include "viewforecast.h"
 #include "citydata.h"
 #include "networkhandler.h"
 #include "filehandler.h"
@@ -46,7 +45,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    ViewForecast *forecastWindow;
     QMultiMap<int, WeatherData*> weatherForecast;
     CityData *cityData;
     NetworkHandler *networkHandler;

@@ -30,7 +30,6 @@ SOURCES += \
     citydata.cpp \
     networkhandler.cpp \
     weatherdata.cpp \
-    viewforecast.cpp \
     searchhelper.cpp \
     filehandler.cpp
 
@@ -39,10 +38,8 @@ HEADERS += \
     citydata.h \
     networkhandler.h \
     weatherdata.h \
-    viewforecast.h \
     searchhelper.h \
     filehandler.h
 
 FORMS += \
-        mainwindow.ui \
-    viewforecast.ui
+        mainwindow.ui
