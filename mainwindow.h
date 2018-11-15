@@ -8,6 +8,7 @@
 #include "viewforecast.h"
 #include "citydata.h"
 #include "networkhandler.h"
+#include "filehandler.h"
 #include <QCompleter>
 
 namespace Ui {
@@ -40,6 +41,7 @@ private:
     CityData *cityData;
     NetworkHandler *networkHandler;
     QCompleter *completerForSearch;
+    FileHandler *fileHandler;
 };
 
 #endif // MAINWINDOW_H

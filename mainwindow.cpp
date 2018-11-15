@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     networkHandler = new NetworkHandler();
     forecastWindow = new ViewForecast();
+    fileHandler = new FileHandler();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
     ui->search->setCompleter(this->completerForSearch);
     connect(this, SIGNAL(sendForecast(QMultiMap<int,WeatherData*>)), forecastWindow, SLOT(recieveForecast(QMultiMap<int,WeatherData*>)));
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete fileHandler;
     delete networkHandler;
     delete forecastWindow;
     delete completerForSearch;
@@ -82,4 +84,5 @@ void MainWindow::on_viewForecast_clicked()
 void MainWindow::on_clearSearchField_clicked()
 {
     ui->search->clear();
+
 }
