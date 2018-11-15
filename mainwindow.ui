@@ -402,6 +402,26 @@
      <string>Погода выбранного города</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="choiseMetricTemperature">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>180</y>
+      <width>51</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>°C</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>°F</string>
+     </property>
+    </item>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

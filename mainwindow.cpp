@@ -158,3 +158,19 @@ void MainWindow::showRealTimeWeather(WeatherData * weatherData)
 }
 
 
+
+void MainWindow::on_choiseMetricTemperature_activated(int index)
+{
+    if(index == 1 && !ui->temperatureL->text().isEmpty())
+    {
+        ui->temperatureL->setText(QString::number(networkHandler->getRealTimeWeatherData()->getTemperature().toDouble() + 273.15) + " °F");
+        ui->maxTemperatureL->setText(QString::number(networkHandler->getRealTimeWeatherData()->getTempMax().toDouble() + 273.15) + " °F");
+        ui->minTemperatureL->setText(QString::number(networkHandler->getRealTimeWeatherData()->getTempMin().toDouble() + 273.15) + " °F");
+
+    }else if(!ui->temperatureL->text().isEmpty())
+    {
+        ui->temperatureL->setText(networkHandler->getRealTimeWeatherData()->getTemperature() + " °C");
+        ui->maxTemperatureL->setText(networkHandler->getRealTimeWeatherData()->getTempMax() + " °C");
+        ui->minTemperatureL->setText(networkHandler->getRealTimeWeatherData()->getTempMin() + " °C");
+    }
+}

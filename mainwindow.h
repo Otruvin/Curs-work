@@ -42,6 +42,10 @@ private slots:
 
     void on_selectFavorCity_clicked();
 
+
+
+    void on_choiseMetricTemperature_activated(int index);
+
 private:
     Ui::MainWindow *ui;
 
