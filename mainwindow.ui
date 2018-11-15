@@ -276,15 +276,15 @@
    <widget class="QPushButton" name="viewForecast">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>400</x>
       <y>530</y>
-      <width>361</width>
+      <width>311</width>
       <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>13</pointsize>
+      <pointsize>11</pointsize>
      </font>
     </property>
     <property name="text">
@@ -435,7 +435,7 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>290</x>
       <y>520</y>
       <width>161</width>
       <height>41</height>
@@ -443,11 +443,24 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>20</pointsize>
+      <pointsize>16</pointsize>
      </font>
     </property>
     <property name="text">
      <string>Прогноз</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="realTimeWeatherShow">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>530</y>
+      <width>271</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Показать погоду на данный момент</string>
     </property>
    </widget>
   </widget>

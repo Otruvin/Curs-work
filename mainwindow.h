@@ -42,6 +42,8 @@ private slots:
 
     void on_viewForecast_clicked();
 
+    void on_realTimeWeatherShow_clicked();
+
 private:
     Ui::MainWindow *ui;
 

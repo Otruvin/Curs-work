@@ -231,3 +231,15 @@ void MainWindow::setAllForecastToList()
     }
 
 }
+
+void MainWindow::on_realTimeWeatherShow_clicked()
+{
+    if(networkHandler->getRealTimeWeatherData()->getTemperature() != NULL)
+    {
+        showWeather(networkHandler->getRealTimeWeatherData());
+    }else
+    {
+        QMessageBox::information(this, "Ошибка введения данных", "Данные о городе не заданы");
+    }
+
+}
