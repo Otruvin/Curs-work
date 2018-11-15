@@ -113,6 +113,11 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
         qDebug() << replyForForecast->errorString();
     }else
     {
+        if(!this->weatherForecast.isEmpty())
+        {
+            this->weatherForecast.clear();
+        }
+
         QJsonDocument documentWithForecast = QJsonDocument::fromJson(replyForForecast->readAll());
 
         if(documentWithForecast.isObject())

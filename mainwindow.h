@@ -23,13 +23,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-signals:
-    void sendForecast(QMultiMap<int, WeatherData*> forecast);
-
 private slots:
     void on_okSearch_clicked();
-
-    void on_viewForecast_clicked();
 
     void on_clearSearchField_clicked();
 
@@ -46,6 +41,8 @@ private slots:
 
     void on_choiseMetricTemperature_activated(int index);
 
+    void on_viewForecast_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -59,7 +56,9 @@ private:
     QString searchCity;
     QStringList searchParam;
     void refreshFavorList();
-    void showRealTimeWeather(WeatherData *weatherData);
+    void showWeather(WeatherData *weatherData);
+    void setAllForecastToList();
+    WeatherData* currentForecastData;
 };
 
 #endif // MAINWINDOW_H

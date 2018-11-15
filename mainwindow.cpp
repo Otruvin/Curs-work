@@ -6,6 +6,7 @@
 #include "searchhelper.h"
 #include <iostream>
 #include <QMessageBox>
+//#define DEBUG = 1;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,8 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     fileHandler = new FileHandler();
     favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
+
     ui->search->setCompleter(this->completerForSearch);
-    connect(this, SIGNAL(sendForecast(QMultiMap<int,WeatherData*>)), forecastWindow, SLOT(recieveForecast(QMultiMap<int,WeatherData*>)));
     ui->clearSearchField->hide();
 
     refreshFavorList();
@@ -60,7 +61,8 @@ void MainWindow::on_okSearch_clicked()
                 WeatherData *weatherData = networkHandler->getRealTimeWeatherData();
                 this->weatherForecast = networkHandler->getWeatherForecast();
 
-                showRealTimeWeather(weatherData);
+                showWeather(weatherData);
+                setAllForecastToList();
 
                 delete cityData;
             }
@@ -71,19 +73,10 @@ void MainWindow::on_okSearch_clicked()
 
 }
 
-void MainWindow::on_viewForecast_clicked()
-{
-
-    emit sendForecast(this->weatherForecast);
-
-    forecastWindow->show();
-}
-
 void MainWindow::on_clearSearchField_clicked()
 {
     ui->search->clear();
 }
-
 
 void MainWindow::on_addFavorCity_clicked()
 {
@@ -134,20 +127,31 @@ void MainWindow::refreshFavorList()
     }
 }
 
-void MainWindow::on_selectFavorCity_clicked()
+void MainWindow::on_viewForecast_clicked()
 {
-    searchParam = ui->listWidget->currentItem()->text().split(",");
-    this->cityData = new CityData(searchParam.at(1), searchParam.at(0));
-    this->networkHandler->makeCityQuery(*cityData);
-    showRealTimeWeather(networkHandler->getRealTimeWeatherData());
-    this->weatherForecast = networkHandler->getWeatherForecast();
-    emit sendForecast(this->weatherForecast);
-
-    delete cityData;
+    showWeather(this->weatherForecast.values().at(ui->allForecastList->currentIndex().row()));
 }
 
+void MainWindow::on_selectFavorCity_clicked()
+{
+    if(ui->listWidget->currentIndex().isValid())
+    {
+        searchParam = ui->listWidget->currentItem()->text().split(",");
+        this->cityData = new CityData(searchParam.at(1), searchParam.at(0));
+        this->networkHandler->makeCityQuery(*cityData);
+        showWeather(networkHandler->getRealTimeWeatherData());
+        this->weatherForecast = networkHandler->getWeatherForecast();
+        setAllForecastToList();
 
-void MainWindow::showRealTimeWeather(WeatherData * weatherData)
+        delete cityData;
+    }else
+    {
+        QMessageBox::information(this, "Ошибка выбора", "Вы не выбрали город");
+    }
+
+}
+
+void MainWindow::showWeather(WeatherData * weatherData)
 {
     ui->humidityL->setText(weatherData->getHumidity() + " %");
     ui->pressureL->setText(weatherData->getPressure() + " hPa");
@@ -156,8 +160,6 @@ void MainWindow::showRealTimeWeather(WeatherData * weatherData)
     ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
     ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
 }
-
-
 
 void MainWindow::on_choiseMetricTemperature_activated(int index)
 {
@@ -173,4 +175,54 @@ void MainWindow::on_choiseMetricTemperature_activated(int index)
         ui->maxTemperatureL->setText(networkHandler->getRealTimeWeatherData()->getTempMax() + " °C");
         ui->minTemperatureL->setText(networkHandler->getRealTimeWeatherData()->getTempMin() + " °C");
     }
+}
+
+void MainWindow::setAllForecastToList()
+{
+    ui->allForecastList->clear();
+
+    #ifdef DEBUG
+    qDebug() << this->weatherForecast << endl;
+    #endif
+
+    QList<WeatherData*> weather = this->weatherForecast.values();
+    QList<int> days = this->weatherForecast.keys();
+
+    #ifdef DEBUG
+    qDebug() << days << endl;
+    #endif
+
+    QString day;
+
+    for(int i = 0; i < weather.size(); ++i)
+    {
+        if(days[i] == 1)
+        {
+            day = QStringLiteral("Понедельник");
+        }else if(days[i] == 2)
+        {
+            day = QStringLiteral("Вторник");
+        }else if(days[i] == 3)
+        {
+            day = QStringLiteral("Среда");
+        }else if(days[i] == 4)
+        {
+            day = QStringLiteral("Четверг");
+        }else if(days[i] == 5)
+        {
+            day = QStringLiteral("Пятница");
+        }else if(days[i] == 6)
+        {
+            day = QStringLiteral("Суббота");
+        }else if(days[i] == 7)
+        {
+            day = QStringLiteral("Воскресенье");
+        }
+
+        ui->allForecastList->addItem(day + " "
+                            + weather[i]->getTime() + " Температура: "
+                            + weather[i]->getTemperature() + " °C   Погода: "
+                            + weather[i]->getWeatherDescription());
+    }
+
 }
