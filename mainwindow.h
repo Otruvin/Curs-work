@@ -63,6 +63,7 @@ private:
     void setAllForecastToList();
     WeatherData* currentForecastData;
     OptionsWindow *optionsWindow;
+    QStringList lisWithUserCityCoords;
 };
 
 #endif // MAINWINDOW_H

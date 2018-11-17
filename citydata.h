@@ -20,7 +20,7 @@ public:
 
     CityData(const QString &latitude, const QString &longitude,
              const QString &country, const QString &cityName);
-    CityData(const QString &country, const QString &cityName);
+    CityData();
     ~CityData() = default;
 
 
@@ -31,8 +31,8 @@ public:
     QJsonObject getJSONCityData() const;
 
 
-    void setLatitude(const double &latitude);
-    void setLongitude(const double &longitude);
+    void setLatitude(const QString &latitude);
+    void setLongitude(const QString &longitude);
     void setCountry(const QString &country);
     void setCityName(const QString &cityName);
 };

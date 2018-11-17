@@ -10,44 +10,9 @@ CityData::CityData(const QString &latitude, const QString &longitude,
     this->cityName = cityName;
 }
 
-CityData::CityData(const QString &country, const QString &cityName)
+CityData::CityData()
 {
-    QFile file("C:/Users/Admin/Desktop/Curs-work/worldcities.csv");
 
-        if (!file.open(QFile::ReadOnly | QFile::Text))
-        {
-            qDebug("File with cities not found!");
-        }else
-        {
-            QTextStream in(&file);
-
-            while (!file.atEnd())
-            {
-                QString line = in.readLine();
-
-                QStringList tempList = line.split(",");
-
-                if (tempList.at(1).contains(cityName) && tempList.at(4).contains(country))
-                {
-
-                    for (int i = 1; i < 5; ++i)
-                    {
-                        tempList[i].chop(1);
-                        tempList[i].remove(0,1);
-                    }
-
-                    this->latitude = tempList.at(2);
-                    this->longitude = tempList.at(3);
-                    this->country = tempList.at(4);
-                    this->cityName = tempList.at(1);
-
-                    break;
-                }
-
-            }
-
-            file.close();
-        }
 }
 
 QString CityData::getLatitude() const
@@ -82,12 +47,12 @@ QJsonObject CityData::getJSONCityData() const
     return jsonCity;
 }
 
-void CityData::setLatitude(const double &latitude)
+void CityData::setLatitude(const QString &latitude)
 {
     this->latitude = latitude;
 }
 
-void CityData::setLongitude(const double &longitude)
+void CityData::setLongitude(const QString &longitude)
 {
     this->longitude = longitude;
 }

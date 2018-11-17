@@ -7,10 +7,12 @@ FileHandler::FileHandler()
 {
     this->file = new QFile("C:/Users/Admin/Desktop/Curs-work/favoraties.bin");
     this->fileWithCityUser = new QFile("C:/Users/Admin/Desktop/Curs-work/userCity.bin");
+    this->fileWithCities = new QFile("C:/Users/Admin/Desktop/Curs-work/worldcities.csv");
 }
 
 FileHandler::~FileHandler()
 {
+    delete fileWithCities;
     delete fileWithCityUser;
     delete file;
 }
@@ -98,4 +100,43 @@ void FileHandler::saveCityUser(QString userCity)
 
     this->fileWithCityUser->flush();
     this->fileWithCityUser->close();
+}
+
+void FileHandler::inserCoordCity(CityData &city)
+{
+
+        if (!this->fileWithCities->open(QFile::ReadOnly | QFile::Text))
+        {
+            qDebug("File with cities not found!");
+        }else
+        {
+            QTextStream in(this->fileWithCities);
+
+            while (!this->fileWithCities->atEnd())
+            {
+                QString line = in.readLine();
+
+                QStringList tempList = line.split(",");
+
+                if (tempList.at(1).contains(city.getCityName()) && tempList.at(4).contains(city.getCountry()))
+                {
+
+                    for (int i = 1; i < 5; ++i)
+                    {
+                        tempList[i].chop(1);
+                        tempList[i].remove(0,1);
+                    }
+
+                    city.setLatitude(tempList.at(2));
+                    city.setLongitude(tempList.at(3));
+                    city.setCountry(tempList.at(4));
+                    city.setCityName(tempList.at(1));
+
+                    break;
+                }
+
+            }
+
+            fileWithCities->close();
+        }
 }

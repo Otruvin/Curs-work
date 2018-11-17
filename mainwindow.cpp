@@ -13,11 +13,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    cityData = new CityData();
     networkHandler = new NetworkHandler();
     fileHandler = new FileHandler();
     favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
     this->optionsWindow = new OptionsWindow();
+    this->lisWithUserCityCoords = fileHandler->loadCityUser().split(",");
+
+    /*if(!lisWithUserCityCoords.isEmpty())
+    {
+
+    }*/
 
     ui->search->setCompleter(this->completerForSearch);
     ui->clearSearchField->hide();
@@ -28,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     fileHandler->saveFavor(this->favoraties);
+    delete cityData;
     delete optionsWindow;
     delete fileHandler;
     delete networkHandler;
@@ -49,7 +57,10 @@ void MainWindow::on_okSearch_clicked()
             this->searchCity = ui->search->text();
             searchParam = this->searchCity.split(",");
 
-            this->cityData = new CityData(searchParam.at(1), searchParam.at(0));
+            this->cityData->setCountry(searchParam.at(1));
+            this->cityData->setCityName(searchParam.at(0));
+
+            this->fileHandler->inserCoordCity(*cityData);
 
             if(this->cityData->getLatitude() == 0 && this->cityData->getLongitude() == 0)
             {
@@ -64,7 +75,6 @@ void MainWindow::on_okSearch_clicked()
                 showWeather(weatherData);
                 setAllForecastToList();
 
-                delete cityData;
             }
 
         }
@@ -145,13 +155,14 @@ void MainWindow::on_selectFavorCity_clicked()
     if(ui->listWidget->currentIndex().isValid())
     {
         searchParam = ui->listWidget->currentItem()->text().split(",");
-        this->cityData = new CityData(searchParam.at(1), searchParam.at(0));
+        this->cityData->setCountry(searchParam.at(1));
+        this->cityData->setCityName(searchParam.at(0));
+        this->fileHandler->inserCoordCity(*cityData);
         this->networkHandler->makeCityQuery(*cityData);
         showWeather(networkHandler->getRealTimeWeatherData());
         this->weatherForecast = networkHandler->getWeatherForecast();
         setAllForecastToList();
 
-        delete cityData;
     }else
     {
         QMessageBox::information(this, "Ошибка выбора", "Вы не выбрали город");
