@@ -25,10 +25,19 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this, SIGNAL(sendForecast(QMultiMap<int, WeatherData*>)), this, SLOT(catchForecastToList(QMultiMap<int, WeatherData *>)));
     connect(this, SIGNAL(sendRealTimeWeather(WeatherData*)), this, SLOT(catchRealTimeWeather(WeatherData*)));
 
-    /*if(!lisWithUserCityCoords.isEmpty())
+    if(!lisWithUserCityCoords.isEmpty())
     {
+        lisWithUserCityCoords = this->fileHandler->loadCityUser().split(",");
+        this->cityData->setCityName(lisWithUserCityCoords.at(0));
+        this->cityData->setCountry(lisWithUserCityCoords.at(1));
+        this->fileHandler->inserCoordCity(*cityData);
+        this->networkHandler->makeCityQuery(*cityData);
 
-    }*/
+        ui->selectedCountryAndCity->setText(this->cityData->getCityName() + ", " + this->cityData->getCountry());
+
+        emit sendForecast(this->networkHandler->getWeatherForecast());
+        emit sendRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
+    }
 
     ui->search->setCompleter(this->completerForSearch);
     ui->clearSearchField->hide();
@@ -72,6 +81,8 @@ void MainWindow::on_okSearch_clicked()
             }else{
 
                 this->networkHandler->makeCityQuery(*cityData);
+
+                ui->selectedCountryAndCity->setText(this->cityData->getCityName() + ", " + this->cityData->getCountry());
 
                 emit sendForecast(this->networkHandler->getWeatherForecast());
                 emit sendRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
@@ -160,6 +171,8 @@ void MainWindow::on_selectFavorCity_clicked()
         this->cityData->setCityName(searchParam.at(0));
         this->fileHandler->inserCoordCity(*cityData);
         this->networkHandler->makeCityQuery(*cityData);
+
+        ui->selectedCountryAndCity->setText(this->cityData->getCityName() + ", " + this->cityData->getCountry());
 
         emit sendForecast(this->networkHandler->getWeatherForecast());
         emit sendRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
