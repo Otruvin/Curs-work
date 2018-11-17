@@ -12,7 +12,7 @@ QStringList SearchHelper::getListWithCities()
 {
     QStringList listWithCities;
 
-    QFile file("/home/otruvin/QtProject/Curs-work/worldcities.csv");
+    QFile file("C:/Users/Admin/Desktop/Curs-work/worldcities.csv");
 
         if (!file.open(QFile::ReadOnly | QFile::Text))
         {

@@ -5,11 +5,13 @@
 
 FileHandler::FileHandler()
 {
-    this->file = new QFile("/home/otruvin/QtProject/Curs-work/favoraties.bin");
+    this->file = new QFile("C:/Users/Admin/Desktop/Curs-work/favoraties.bin");
+    this->fileWithCityUser = new QFile("C:/Users/Admin/Desktop/Curs-work/userCity.bin");
 }
 
 FileHandler::~FileHandler()
 {
+    delete fileWithCityUser;
     delete file;
 }
 
@@ -54,4 +56,46 @@ QSet<QString> FileHandler::loadFavor()
 void FileHandler::clear()
 {
     this->file->resize(0);
+}
+
+void FileHandler::clearUserCity()
+{
+    this->fileWithCityUser->resize(0);
+}
+
+QString FileHandler::loadCityUser()
+{
+    QString userCity;
+
+    if(!this->fileWithCityUser->open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Not open";
+        return userCity;
+    }
+
+    QDataStream in(this->fileWithCityUser);
+    in.setVersion(QDataStream::Qt_5_9);
+
+    in >> userCity;
+
+    this->fileWithCityUser->close();
+
+    return userCity;
+}
+
+void FileHandler::saveCityUser(QString userCity)
+{
+    if(!this->fileWithCityUser->open(QIODevice::WriteOnly))
+    {
+        qDebug() << "Not open";
+        return;
+    }
+
+    QDataStream out(this->fileWithCityUser);
+    out.setVersion(QDataStream::Qt_5_9);
+
+    out << userCity;
+
+    this->fileWithCityUser->flush();
+    this->fileWithCityUser->close();
 }

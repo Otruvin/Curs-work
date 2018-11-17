@@ -7,6 +7,7 @@ class FileHandler
 {
 private:
     QFile *file;
+    QFile *fileWithCityUser;
 
 public:
     FileHandler();
@@ -14,6 +15,9 @@ public:
     void saveFavor(QSet<QString> set);
     QSet<QString> loadFavor();
     void clear();
+    void clearUserCity();
+    QString loadCityUser();
+    void saveCityUser(QString userCity);
 };
 
 #endif // FILEHANDLER_H

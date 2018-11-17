@@ -9,6 +9,7 @@
 #include "networkhandler.h"
 #include "filehandler.h"
 #include <QCompleter>
+#include "optionswindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -44,6 +45,8 @@ private slots:
 
     void on_realTimeWeatherShow_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -59,6 +62,7 @@ private:
     void showWeather(WeatherData *weatherData);
     void setAllForecastToList();
     WeatherData* currentForecastData;
+    OptionsWindow *optionsWindow;
 };
 
 #endif // MAINWINDOW_H

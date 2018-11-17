@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     fileHandler = new FileHandler();
     favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
+    this->optionsWindow = new OptionsWindow();
 
     ui->search->setCompleter(this->completerForSearch);
     ui->clearSearchField->hide();
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     fileHandler->saveFavor(this->favoraties);
+    delete optionsWindow;
     delete fileHandler;
     delete networkHandler;
     delete completerForSearch;
@@ -74,6 +76,7 @@ void MainWindow::on_okSearch_clicked()
 void MainWindow::on_clearSearchField_clicked()
 {
     ui->search->clear();
+    ui->clearSearchField->hide();
 }
 
 void MainWindow::on_addFavorCity_clicked()
@@ -203,25 +206,25 @@ void MainWindow::setAllForecastToList()
     {
         if(days[i] == 1)
         {
-            day = QStringLiteral("Понедельник");
+            day = "Понедельник";
         }else if(days[i] == 2)
         {
-            day = QStringLiteral("Вторник");
+            day = "Вторник";
         }else if(days[i] == 3)
         {
-            day = QStringLiteral("Среда");
+            day = "Среда";
         }else if(days[i] == 4)
         {
-            day = QStringLiteral("Четверг");
+            day = "Четверг";
         }else if(days[i] == 5)
         {
-            day = QStringLiteral("Пятница");
+            day = "Пятница";
         }else if(days[i] == 6)
         {
-            day = QStringLiteral("Суббота");
+            day = "Суббота";
         }else if(days[i] == 7)
         {
-            day = QStringLiteral("Воскресенье");
+            day = "Воскресенье";
         }
 
         ui->allForecastList->addItem(day + " "
@@ -242,4 +245,9 @@ void MainWindow::on_realTimeWeatherShow_clicked()
         QMessageBox::information(this, "Ошибка введения данных", "Данные о городе не заданы");
     }
 
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    this->optionsWindow->show();
 }
