@@ -23,6 +23,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+signals:
+    void sendForecast(QMultiMap<int, WeatherData*> forecast);
+    void sendRealTimeWeather(WeatherData *weatherData);
+
 private slots:
     void on_okSearch_clicked();
 
@@ -47,6 +51,10 @@ private slots:
 
     void on_pushButton_clicked();
 
+public slots:
+    void catchRealTimeWeather(WeatherData *weatherData);
+    void catchForecastToList(QMultiMap<int, WeatherData *> forecast);
+
 private:
     Ui::MainWindow *ui;
 
@@ -59,8 +67,6 @@ private:
     QString searchCity;
     QStringList searchParam;
     void refreshFavorList();
-    void showWeather(WeatherData *weatherData);
-    void setAllForecastToList();
     WeatherData* currentForecastData;
     OptionsWindow *optionsWindow;
     QStringList lisWithUserCityCoords;

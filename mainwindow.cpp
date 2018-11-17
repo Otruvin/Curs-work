@@ -21,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
     this->optionsWindow = new OptionsWindow();
     this->lisWithUserCityCoords = fileHandler->loadCityUser().split(",");
 
+
+    connect(this, SIGNAL(sendForecast(QMultiMap<int, WeatherData*>)), this, SLOT(catchForecastToList(QMultiMap<int, WeatherData *>)));
+    connect(this, SIGNAL(sendRealTimeWeather(WeatherData*)), this, SLOT(catchRealTimeWeather(WeatherData*)));
+
     /*if(!lisWithUserCityCoords.isEmpty())
     {
 
@@ -69,11 +73,8 @@ void MainWindow::on_okSearch_clicked()
 
                 this->networkHandler->makeCityQuery(*cityData);
 
-                WeatherData *weatherData = networkHandler->getRealTimeWeatherData();
-                this->weatherForecast = networkHandler->getWeatherForecast();
-
-                showWeather(weatherData);
-                setAllForecastToList();
+                emit sendForecast(this->networkHandler->getWeatherForecast());
+                emit sendRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
 
             }
 
@@ -142,7 +143,7 @@ void MainWindow::on_viewForecast_clicked()
 {
     if(ui->allForecastList->currentIndex().isValid())
     {
-        showWeather(this->weatherForecast.values().at(ui->allForecastList->currentIndex().row()));
+        emit sendRealTimeWeather(this->networkHandler->getWeatherForecast().values().at(ui->allForecastList->currentIndex().row()));
     }else
     {
         QMessageBox::information(this, "Ошибка выбора погоды из прогноза", "Вы не выбрали временной промежуток из прогноза");
@@ -159,25 +160,15 @@ void MainWindow::on_selectFavorCity_clicked()
         this->cityData->setCityName(searchParam.at(0));
         this->fileHandler->inserCoordCity(*cityData);
         this->networkHandler->makeCityQuery(*cityData);
-        showWeather(networkHandler->getRealTimeWeatherData());
-        this->weatherForecast = networkHandler->getWeatherForecast();
-        setAllForecastToList();
+
+        emit sendForecast(this->networkHandler->getWeatherForecast());
+        emit sendRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
 
     }else
     {
         QMessageBox::information(this, "Ошибка выбора", "Вы не выбрали город");
     }
 
-}
-
-void MainWindow::showWeather(WeatherData * weatherData)
-{
-    ui->humidityL->setText(weatherData->getHumidity() + " %");
-    ui->pressureL->setText(weatherData->getPressure() + " hPa");
-    ui->temperatureL->setText(weatherData->getTemperature() + " °C");
-    ui->weatherDescrL->setText(weatherData->getWeatherDescription());
-    ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
-    ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
 }
 
 void MainWindow::on_choiseMetricTemperature_activated(int index)
@@ -196,16 +187,43 @@ void MainWindow::on_choiseMetricTemperature_activated(int index)
     }
 }
 
-void MainWindow::setAllForecastToList()
+void MainWindow::on_realTimeWeatherShow_clicked()
+{
+    if(networkHandler->getRealTimeWeatherData()->getTemperature() != NULL)
+    {
+        emit catchRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
+    }else
+    {
+        QMessageBox::information(this, "Ошибка введения данных", "Данные о городе не заданы");
+    }
+
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    this->optionsWindow->show();
+}
+
+void MainWindow::catchRealTimeWeather(WeatherData *weatherData)
+{
+    ui->humidityL->setText(weatherData->getHumidity() + " %");
+    ui->pressureL->setText(weatherData->getPressure() + " hPa");
+    ui->temperatureL->setText(weatherData->getTemperature() + " °C");
+    ui->weatherDescrL->setText(weatherData->getWeatherDescription());
+    ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
+    ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
+}
+
+void MainWindow::catchForecastToList(QMultiMap<int, WeatherData *> forecast)
 {
     ui->allForecastList->clear();
 
     #ifdef DEBUG
-    qDebug() << this->weatherForecast << endl;
+    qDebug() << forecast << endl;
     #endif
 
-    QList<WeatherData*> weather = this->weatherForecast.values();
-    QList<int> days = this->weatherForecast.keys();
+    QList<WeatherData*> weather = forecast.values();
+    QList<int> days = forecast.keys();
 
     #ifdef DEBUG
     qDebug() << days << endl;
@@ -243,22 +261,4 @@ void MainWindow::setAllForecastToList()
                             + weather[i]->getTemperature() + " °C   Погода: "
                             + weather[i]->getWeatherDescription());
     }
-
-}
-
-void MainWindow::on_realTimeWeatherShow_clicked()
-{
-    if(networkHandler->getRealTimeWeatherData()->getTemperature() != NULL)
-    {
-        showWeather(networkHandler->getRealTimeWeatherData());
-    }else
-    {
-        QMessageBox::information(this, "Ошибка введения данных", "Данные о городе не заданы");
-    }
-
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    this->optionsWindow->show();
 }
