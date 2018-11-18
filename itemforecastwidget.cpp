@@ -58,7 +58,6 @@ ItemForecastWidget::ItemForecastWidget(QString weekDay, QString time, QString we
     this->layout->addWidget(this->weatherIconImg, 4, Qt::AlignLeft);
 
     this->setLayout(this->layout);
-    this->show();
 
 }
 
