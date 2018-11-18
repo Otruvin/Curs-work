@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     fileHandler = new FileHandler();
     pixmapForWeatherIcon = new QPixmap();
     itemForecast = new QWidgetItem(this);
-    itemWidget = new ItemForecastWidget();
     favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
     this->optionsWindow = new OptionsWindow();
@@ -54,7 +53,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     fileHandler->saveFavor(this->favoraties);
-    delete itemWidget;
     delete itemForecast;
     delete pixmapForWeatherIcon;
     delete cityData;

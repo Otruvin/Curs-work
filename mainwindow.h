@@ -76,7 +76,6 @@ private:
     QStringList lisWithUserCityCoords;
     QPixmap *pixmapForWeatherIcon;
     QWidgetItem *itemForecast;
-    ItemForecastWidget *itemWidget;
 
 };
 
