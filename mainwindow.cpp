@@ -6,6 +6,10 @@
 #include "searchhelper.h"
 #include <iostream>
 #include <QMessageBox>
+#include <QIcon>
+#include <QtGui>
+#include <QListWidgetItem>
+#include "itemforecastwidget.h"
 //#define DEBUG = 1;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -16,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     cityData = new CityData();
     networkHandler = new NetworkHandler();
     fileHandler = new FileHandler();
+    pixmapForWeatherIcon = new QPixmap();
+    itemForecast = new QWidgetItem(this);
+    itemWidget = new ItemForecastWidget();
     favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
     this->optionsWindow = new OptionsWindow();
@@ -34,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
         this->networkHandler->makeCityQuery(*cityData);
 
         ui->selectedCountryAndCity->setText(this->cityData->getCityName() + ", " + this->cityData->getCountry());
-
         emit sendForecast(this->networkHandler->getWeatherForecast());
         emit sendRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
     }
@@ -48,6 +54,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     fileHandler->saveFavor(this->favoraties);
+    delete itemWidget;
+    delete itemForecast;
+    delete pixmapForWeatherIcon;
     delete cityData;
     delete optionsWindow;
     delete fileHandler;
@@ -225,6 +234,8 @@ void MainWindow::catchRealTimeWeather(WeatherData *weatherData)
     ui->weatherDescrL->setText(weatherData->getWeatherDescription());
     ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
     ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
+    this->pixmapForWeatherIcon->load("C:/Users/Admin/Desktop/Curs-work/Icons_weather/" + weatherData->getWeatherIcon() + ".png");
+    ui->weatherIcon->setPixmap(pixmapForWeatherIcon->scaled(ui->weatherIcon->width(), ui->weatherIcon->height(), Qt::KeepAspectRatio));
 }
 
 void MainWindow::catchForecastToList(QMultiMap<int, WeatherData *> forecast)
@@ -269,9 +280,11 @@ void MainWindow::catchForecastToList(QMultiMap<int, WeatherData *> forecast)
             day = "Воскресенье";
         }
 
-        ui->allForecastList->addItem(day + " "
-                            + weather[i]->getTime() + " Температура: "
-                            + weather[i]->getTemperature() + " °C   Погода: "
-                            + weather[i]->getWeatherDescription());
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setSizeHint(QSize(90, 50));
+        ui->allForecastList->addItem(item);
+        ui->allForecastList->setItemWidget(item, new ItemForecastWidget(day, weather[i]->getTime(), weather[i]->getWeatherDescription(),
+                                                                        weather[i]->getTemperature(), weather[i]->getHumidity(), weather[i]->getWeatherIcon()));
     }
+
 }

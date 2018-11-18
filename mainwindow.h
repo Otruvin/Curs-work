@@ -10,6 +10,10 @@
 #include "filehandler.h"
 #include <QCompleter>
 #include "optionswindow.h"
+#include <QPixmap>
+#include <QWidgetItem>
+#include "itemforecastwidget.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -70,6 +74,10 @@ private:
     WeatherData* currentForecastData;
     OptionsWindow *optionsWindow;
     QStringList lisWithUserCityCoords;
+    QPixmap *pixmapForWeatherIcon;
+    QWidgetItem *itemForecast;
+    ItemForecastWidget *itemWidget;
+
 };
 
 #endif // MAINWINDOW_H

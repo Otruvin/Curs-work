@@ -32,7 +32,8 @@ SOURCES += \
     weatherdata.cpp \
     searchhelper.cpp \
     filehandler.cpp \
-    optionswindow.cpp
+    optionswindow.cpp \
+    itemforecastwidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     weatherdata.h \
     searchhelper.h \
     filehandler.h \
-    optionswindow.h
+    optionswindow.h \
+    itemforecastwidget.h
 
 FORMS += \
         mainwindow.ui \
