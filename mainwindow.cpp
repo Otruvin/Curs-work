@@ -198,17 +198,23 @@ void MainWindow::on_selectFavorCity_clicked()
 
 void MainWindow::on_choiseMetricTemperature_activated(int index)
 {
-    if(index == 1 && !ui->temperatureL->text().isEmpty())
+    if(index == 1 && !ui->temperatureL->text().isEmpty() && ui->temperatureL->text().contains("°C"))
     {
-        ui->temperatureL->setText(QString::number(networkHandler->getRealTimeWeatherData()->getTemperature().toDouble() + 273.15) + " °F");
-        ui->maxTemperatureL->setText(QString::number(networkHandler->getRealTimeWeatherData()->getTempMax().toDouble() + 273.15) + " °F");
-        ui->minTemperatureL->setText(QString::number(networkHandler->getRealTimeWeatherData()->getTempMin().toDouble() + 273.15) + " °F");
+        temperaturePars = ui->temperatureL->text().split(" ");
+        ui->temperatureL->setText(QString::number(temperaturePars.at(0).toDouble() + 273.15) + " °F");
+        temperaturePars = ui->maxTemperatureL->text().split(" ");
+        ui->maxTemperatureL->setText(QString::number(temperaturePars.at(0).toDouble() + 273.15) + " °F");
+        temperaturePars = ui->minTemperatureL->text().split(" ");
 
-    }else if(!ui->temperatureL->text().isEmpty())
+    }else if(!ui->temperatureL->text().isEmpty() && ui->temperatureL->text().contains("°F"))
     {
-        ui->temperatureL->setText(networkHandler->getRealTimeWeatherData()->getTemperature() + " °C");
-        ui->maxTemperatureL->setText(networkHandler->getRealTimeWeatherData()->getTempMax() + " °C");
-        ui->minTemperatureL->setText(networkHandler->getRealTimeWeatherData()->getTempMin() + " °C");
+        temperaturePars = ui->temperatureL->text().split(" ");
+        ui->temperatureL->setText(QString::number(temperaturePars.at(0).toDouble() - 273.15) + " °C");
+        temperaturePars = ui->maxTemperatureL->text().split(" ");
+        ui->maxTemperatureL->setText(QString::number(temperaturePars.at(0).toDouble() - 273.15) + " °C");
+        temperaturePars = ui->minTemperatureL->text().split(" ");
+        ui->minTemperatureL->setText(QString::number(temperaturePars.at(0).toDouble() - 273.15) + " °C");
+
     }
 }
 
@@ -237,6 +243,7 @@ void MainWindow::catchRealTimeWeather(WeatherData *weatherData)
     ui->weatherDescrL->setText(weatherData->getWeatherDescription());
     ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
     ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
+    ui->choiseMetricTemperature->setCurrentIndex(0);
     this->pixmapForWeatherIcon->load("C:/Users/Admin/Desktop/Curs-work/Icons_weather/" + weatherData->getWeatherIcon() + ".png");
     ui->weatherIcon->setPixmap(pixmapForWeatherIcon->scaled(ui->weatherIcon->width(), ui->weatherIcon->height(), Qt::KeepAspectRatio));
 }
