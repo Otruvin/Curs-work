@@ -205,6 +205,8 @@ void MainWindow::on_choiseMetricTemperature_activated(int index)
         temperaturePars = ui->maxTemperatureL->text().split(" ");
         ui->maxTemperatureL->setText(QString::number(temperaturePars.at(0).toDouble() + 273.15) + " °F");
         temperaturePars = ui->minTemperatureL->text().split(" ");
+        ui->minTemperatureL->setText(QString::number(temperaturePars.at(0).toDouble() + 273.15) + " °F");
+
 
     }else if(!ui->temperatureL->text().isEmpty() && ui->temperatureL->text().contains("°F"))
     {
