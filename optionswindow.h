@@ -17,6 +17,10 @@ public:
     explicit OptionsWindow(QWidget *parent = nullptr);
     ~OptionsWindow();
 
+signals:
+    void userCityAdded();
+    void userCityCleared();
+
 private slots:
     void on_buttonBox_accepted();
 

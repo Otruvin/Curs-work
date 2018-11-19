@@ -33,6 +33,8 @@ void OptionsWindow::on_buttonBox_accepted()
         fileHandler->saveCityUser(ui->enterUserCity->text());
         ui->selectedUserCity->setText(fileHandler->loadCityUser());
         ui->enterUserCity->clear();
+
+        emit userCityAdded();
     }
 }
 
@@ -48,6 +50,8 @@ void OptionsWindow::on_resetCityUser_clicked()
             ui->enterUserCity->clear();
             fileHandler->clearUserCity();
             ui->selectedUserCity->setText("Ваши город и страна не заданы");
+
+            emit userCityCleared();
         }
 
     }else

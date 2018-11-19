@@ -25,14 +25,16 @@ MainWindow::MainWindow(QWidget *parent) :
     favoraties = fileHandler->loadFavor();
     completerForSearch = new QCompleter(SearchHelper::getListWithCities(), this);
     this->optionsWindow = new OptionsWindow();
-    this->lisWithUserCityCoords = fileHandler->loadCityUser().split(",");
 
 
     connect(this, SIGNAL(sendForecast(QMultiMap<int, WeatherData*>)), this, SLOT(catchForecastToList(QMultiMap<int, WeatherData *>)));
     connect(this, SIGNAL(sendRealTimeWeather(WeatherData*)), this, SLOT(catchRealTimeWeather(WeatherData*)));
+    connect(this->optionsWindow, SIGNAL(userCityAdded()), this, SLOT(searchChangeUserCity()));
+    connect(this->optionsWindow, SIGNAL(userCityCleared()), this, SLOT(searchClearUserCity()));
 
-    if(!lisWithUserCityCoords.isEmpty())
+    if(!fileHandler->loadCityUser().isEmpty())
     {
+
         lisWithUserCityCoords = this->fileHandler->loadCityUser().split(",");
         this->cityData->setCityName(lisWithUserCityCoords.at(0));
         this->cityData->setCountry(lisWithUserCityCoords.at(1));
@@ -42,6 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->selectedCountryAndCity->setText(this->cityData->getCityName() + ", " + this->cityData->getCountry());
         emit sendForecast(this->networkHandler->getWeatherForecast());
         emit sendRealTimeWeather(this->networkHandler->getRealTimeWeatherData());
+    }else
+    {
+        ui->UserCityException->setText("Внимание! город пользователя не задан");
     }
 
     ui->search->setCompleter(this->completerForSearch);
@@ -285,4 +290,14 @@ void MainWindow::catchForecastToList(QMultiMap<int, WeatherData *> forecast)
                                                                         weather[i]->getTemperature(), weather[i]->getHumidity(), weather[i]->getWeatherIcon()));
     }
 
+}
+
+void MainWindow::searchChangeUserCity()
+{
+    ui->UserCityException->clear();
+}
+
+void MainWindow::searchClearUserCity()
+{
+    ui->UserCityException->setText("Внимание! город пользователя не задан");
 }

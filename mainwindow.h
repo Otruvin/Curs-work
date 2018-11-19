@@ -58,6 +58,8 @@ private slots:
 public slots:
     void catchRealTimeWeather(WeatherData *weatherData);
     void catchForecastToList(QMultiMap<int, WeatherData *> forecast);
+    void searchChangeUserCity();
+    void searchClearUserCity();
 
 private:
     Ui::MainWindow *ui;
