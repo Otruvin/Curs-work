@@ -8,7 +8,7 @@ ItemForecastWidget::ItemForecastWidget(QWidget *parent) : QWidget(parent)
 
 }
 
-ItemForecastWidget::ItemForecastWidget(QString weekDay, QString time, QString weatherDescription, QString temp, QString humidity, QString weatherIcon)
+ItemForecastWidget::ItemForecastWidget(QString weekDay, QString time, QString weatherDescription, QString temp, QString humidity, QString weatherIcon, QString date)
 {
 
     this->layout = new QHBoxLayout();
@@ -19,16 +19,14 @@ ItemForecastWidget::ItemForecastWidget(QString weekDay, QString time, QString we
     this->humidityValue = new QLabel(this);
     this->tempLabel = new QLabel(this);
     this->tempValue = new QLabel(this);
-    this->time = new QLabel(this);
     this->weatherIconImg = new QLabel(this);
     this->weatherIconLabel = new QLabel(this);
     this->weekDay = new QLabel(this);
+    this->date = new QLabel(this);
     this->layout->setMargin(0);
 
-    this->weekDay->setText("Время: " + weekDay);
+    this->weekDay->setText("Время: " + time + "\nДата: " + weekDay + " " + date);
     this->weekDay->setStyleSheet("font-size: 10pt;");
-    this->time->setText(time);
-    this->time->setStyleSheet("font-size: 10pt;");
     this->weatherIconLabel->setText("Погода: " + weatherDescription);
     this->weatherIconLabel->setStyleSheet("font-size: 10pt");
     this->weatherIconImg->setFixedSize(QSize(50, 50));
@@ -47,7 +45,6 @@ ItemForecastWidget::ItemForecastWidget(QString weekDay, QString time, QString we
     this->humidityValue->setText(humidity + " %");
 
     this->layout->addWidget(this->weekDay, 0, Qt::AlignRight);
-    this->layout->addWidget(this->time, 1, Qt::AlignRight);
 
     this->layout->addWidget(this->tempLabel, 5, Qt::AlignRight);
     this->layout->addWidget(this->tempValue, 6, Qt::AlignLeft);
@@ -71,10 +68,10 @@ ItemForecastWidget::~ItemForecastWidget()
     delete this->pixmapForWeatherIcon;
     delete this->tempLabel;
     delete this->tempValue;
-    delete this->time;
     delete this->weatherIconImg;
     delete this->weatherIconLabel;
     delete this->weekDay;
+    delete this->date;
 
 }
 

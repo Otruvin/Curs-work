@@ -11,13 +11,13 @@ class ItemForecastWidget : public QWidget
 
 private:
     QLabel *weatherIconLabel;
-    QLabel *time;
     QLabel *weekDay;
     QLabel *tempLabel;
     QLabel *tempValue;
     QLabel *humidityLabel;
     QLabel *humidityValue;
     QLabel *weatherIconImg;
+    QLabel *date;
     QPixmap *pixmapForTempLabel;
     QPixmap *pixmapForHumidityLabel;
     QPixmap *pixmapForWeatherIcon;
@@ -25,7 +25,7 @@ private:
 
 public:
     explicit ItemForecastWidget(QWidget *parent = nullptr);
-    ItemForecastWidget(QString weekDay, QString time, QString weatherDescription, QString temp, QString humidity, QString weatherIcon);
+    ItemForecastWidget(QString weekDay, QString time, QString weatherDescription, QString temp, QString humidity, QString weatherIcon, QString date);
     ~ItemForecastWidget();
 
 signals:

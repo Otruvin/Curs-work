@@ -77,6 +77,7 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
         if(documentWithRealtimeWeather.isObject())
         {
             QJsonObject object = documentWithRealtimeWeather.object();
+            QJsonObject tempWind;
             QJsonObject tempObject;
             QJsonValue value;
 
@@ -93,12 +94,17 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
             {
                 value = object.value("main");
                 tempObject = value.toObject();
+                tempWind = object.value("wind").toObject();
                 this->realTimeweatherData->setTemperature(QString::number(tempObject.value("temp").toDouble()));
                 this->realTimeweatherData->setPressure(QString::number(tempObject.value("pressure").toDouble()));
                 this->realTimeweatherData->setHumidity(QString::number(tempObject.value("humidity").toDouble()));
                 this->realTimeweatherData->setTempMin(QString::number(tempObject.value("temp_min").toDouble()));
                 this->realTimeweatherData->setTempMax(QString::number(tempObject.value("temp_max").toDouble()));
                 this->realTimeweatherData->setTime(NULL);
+                this->realTimeweatherData->setDate(NULL);
+                this->realTimeweatherData->setWindSpeed(QString::number(tempWind.value("speed").toDouble()));
+
+                qDebug() << "Real time wind speed: " + QString::number(tempWind.value("speed").toDouble()) ;
 
             }
 
@@ -125,6 +131,7 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
             QJsonObject object = documentWithForecast.object();
             QJsonObject tempObject;
             QJsonObject tempMain;
+            QJsonObject tempWind;
             QJsonArray forecastList = object.value("list").toArray();
             QJsonObject tempWeatherObject;
             QString tempData;
@@ -139,6 +146,7 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
                 if(tempObject.contains("main"))
                 {
                     tempMain = tempObject.value("main").toObject();
+                    tempWind = tempObject.value("wind").toObject();
                     dateAndTime = tempData.split(" ");
                     this->weatherForecast.insert(QDate::fromString(tempData.split(" ").at(0), "yyyy-MM-dd").dayOfWeek(), new WeatherData(tempWeatherObject.value("description").toString(),
                                                                            tempWeatherObject.value("icon").toString(),
@@ -147,7 +155,9 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
                                                                            QString::number(tempMain.value("temp_min").toDouble()),
                                                                            QString::number(tempMain.value("temp_max").toDouble()),
                                                                            QString::number(tempMain.value("temp").toDouble()),
-                                                                           dateAndTime.at(1)));
+                                                                           dateAndTime.at(1), dateAndTime.at(0),
+                                                                           QString::number(tempWind.value("speed").toDouble())));
+                    qDebug() << QString::number(tempWind.value("speed").toDouble()) + " date: " + dateAndTime.at(0);
                 }
             }
         }

@@ -246,6 +246,7 @@ void MainWindow::catchRealTimeWeather(WeatherData *weatherData)
     ui->maxTemperatureL->setText(weatherData->getTempMax() + " °C");
     ui->minTemperatureL->setText(weatherData->getTempMin() + " °C");
     ui->choiseMetricTemperature->setCurrentIndex(0);
+    ui->windSpeedL->setText(weatherData->getWindSpeed() + " m / s");
     this->pixmapForWeatherIcon->load("C:/Users/Admin/Desktop/Curs-work/Icons_weather/" + weatherData->getWeatherIcon() + ".png");
     ui->weatherIcon->setPixmap(pixmapForWeatherIcon->scaled(ui->weatherIcon->width(), ui->weatherIcon->height(), Qt::KeepAspectRatio));
 }
@@ -293,10 +294,11 @@ void MainWindow::catchForecastToList(QMultiMap<int, WeatherData *> forecast)
         }
 
         QListWidgetItem *item = new QListWidgetItem();
-        item->setSizeHint(QSize(90, 50));
+        item->setSizeHint(QSize(90, 60));
         ui->allForecastList->addItem(item);
         ui->allForecastList->setItemWidget(item, new ItemForecastWidget(day, weather[i]->getTime(), weather[i]->getWeatherDescription(),
-                                                                        weather[i]->getTemperature(), weather[i]->getHumidity(), weather[i]->getWeatherIcon()));
+                                                                        weather[i]->getTemperature(), weather[i]->getHumidity(), weather[i]->getWeatherIcon(),
+                                                                        weather[i]->getDate()));
     }
 
 }

@@ -15,13 +15,16 @@ private:
     QString tempMax;
     QString temperature;
     QString time;
+    QString date;
+    QString windSpeed;
 public:
 
 
     WeatherData(const QString &weatherDescription, const QString &weatherIcon,
                 const QString &pressure, const QString &humidity,
                 const QString &tempMin, const QString &tempMax,
-                const QString &temperature, const QString &time);
+                const QString &temperature, const QString &time,
+                const QString &date, const QString &windSpeed);
     WeatherData();
     ~WeatherData() = default;
 
@@ -34,6 +37,8 @@ public:
     void setTempMax(const QString &tempMax);
     void setTemperature(const QString &temperature);
     void setTime(const QString &time);
+    void setDate(const QString &date);
+    void setWindSpeed(const QString &windSpeed);
 
 
     QString getWeatherDescription() const;
@@ -44,6 +49,8 @@ public:
     QString getTempMax() const;
     QString getTemperature() const;
     QString getTime() const;
+    QString getDate() const;
+    QString getWindSpeed() const;
 };
 
 #endif // WEATHERDATA_H

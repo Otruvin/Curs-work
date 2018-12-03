@@ -7,7 +7,9 @@ WeatherData::WeatherData(const QString &weatherDescription,
                          const QString &tempMin,
                          const QString &tempMax,
                          const QString &temperature,
-                         const QString &time)
+                         const QString &time,
+                         const QString &date,
+                         const QString &windSpeed)
 {
     this->weatherDescription = weatherDescription;
     this->weatherIcon = weatherIcon;
@@ -17,6 +19,8 @@ WeatherData::WeatherData(const QString &weatherDescription,
     this->tempMax = tempMax;
     this->temperature = temperature;
     this->time = time;
+    this->date = date;
+    this->windSpeed = windSpeed;
 }
 
 WeatherData::WeatherData()
@@ -64,6 +68,16 @@ void WeatherData::setTime(const QString &time)
     this->time = time;
 }
 
+void WeatherData::setDate(const QString &date)
+{
+    this->date = date;
+}
+
+void WeatherData::setWindSpeed(const QString &windSpeed)
+{
+    this->windSpeed = windSpeed;
+}
+
 QString WeatherData::getWeatherDescription() const
 {
     return this->weatherDescription;
@@ -103,3 +117,15 @@ QString WeatherData::getTime() const
 {
     return this->time;
 }
+
+QString WeatherData::getDate() const
+{
+    return this->date;
+}
+
+QString WeatherData::getWindSpeed() const
+{
+    return this->windSpeed;
+}
+
+
