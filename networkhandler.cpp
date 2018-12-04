@@ -104,8 +104,6 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
                 this->realTimeweatherData->setDate(NULL);
                 this->realTimeweatherData->setWindSpeed(QString::number(tempWind.value("speed").toDouble()));
 
-                qDebug() << "Real time wind speed: " + QString::number(tempWind.value("speed").toDouble()) ;
-
             }
 
         }
@@ -157,7 +155,6 @@ void NetworkHandler::onResult(QNetworkReply *replyForRealTimeWeather, QNetworkRe
                                                                            QString::number(tempMain.value("temp").toDouble()),
                                                                            dateAndTime.at(1), dateAndTime.at(0),
                                                                            QString::number(tempWind.value("speed").toDouble())));
-                    qDebug() << QString::number(tempWind.value("speed").toDouble()) + " date: " + dateAndTime.at(0);
                 }
             }
         }

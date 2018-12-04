@@ -104,7 +104,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Максимальная температура:</string>
+     <string>Дневная температура:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -122,7 +122,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Минимальная температура:</string>
+     <string>Ночная температура:</string>
     </property>
    </widget>
    <widget class="QLabel" name="weatherDescrL">
